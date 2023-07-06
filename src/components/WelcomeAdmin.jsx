@@ -1,4 +1,5 @@
 import { useNavigate, Link } from 'react-router-dom';
+import ProductTable from './produtos/ProductTable';
 
 export function WelcomeAdmin() {
 
@@ -22,6 +23,7 @@ export function WelcomeAdmin() {
       <p>Bem-vindo, Admin </p>
       <button onClick={handleRemoveUser}>Remover Usuário</button>
       <button onClick={handleUpdateUser}>Atualizar Usuário</button>
+      < ProductTable />
 
     </div>
   );

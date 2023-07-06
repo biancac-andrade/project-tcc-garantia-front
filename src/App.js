@@ -8,7 +8,7 @@ import { WelcomeAdmin } from './components/WelcomeAdmin';
 import { AuthProvider } from './context/AuthContext';
 import PrivateRoute from './components/PrivateRoute';
 import RemoveUser from './components/RemoveUser';
-import UpdateProfilePage from './components/UpdateProfilePage';
+import ProductTable from './components/produtos/ProductTable';
 
 const App = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -57,7 +57,7 @@ const App = () => {
       <Route exact path="/welcomeAdmin" element={< WelcomeAdmin />} />
       <Route exact path="/removeUser" element={< RemoveUser/>} />
       <Route exact path="/signup" element={< SignupPage />} />
-      <Route exact path="/update" element={< UpdateProfilePage />} />
+      <Route exact path="/products" element={< ProductTable />} />
     </Routes>
   </Router>
     </AuthProvider>
