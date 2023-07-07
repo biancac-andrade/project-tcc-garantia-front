@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate} from 'react-router-dom';
+
 import axios from 'axios';
 import {
   Checkbox,
@@ -13,12 +15,16 @@ import {
 } from '@mui/material';
 
 const ProductTable = () => {
-  const [products, setProducts] = useState([]);
+  //const [products, setProducts] = useState([]);
+  const [products, setProducts] = useState(null);
   const [filterValue, setFilterValue] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
   const [totalItems, setTotalItems] = useState(0);
   const [selected, setSelected] = useState([]);
+
+  const navigate = useNavigate(); // Obtenha o objeto history
+
 
 
   useEffect(() => {
@@ -54,14 +60,13 @@ const ProductTable = () => {
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
 
-  const filteredProducts = products.filter((product) =>
+  // const filteredProducts = products.filter((product) =>
+  // product.product_name.toLowerCase().includes(filterValue.toLowerCase())
+  // );
+
+  const filteredProducts = products !== null ? products.filter((product) =>
   product.product_name.toLowerCase().includes(filterValue.toLowerCase())
-  );
-  
-/* const handlePageChange = (event, newPage) => {
-  setCurrentPage(newPage + 1); // A API de paginação começa do índice 0, então adicionamos 1 para obter a página correta
-  fetchProducts();
-}; */
+) : [];
   
   const handleSelectAll = (event) => {
     if (event.target.checked) {
@@ -81,9 +86,41 @@ const ProductTable = () => {
   };
 
   const isSelected = (id) => selected.includes(id);
+
+  // const handleSend = () => {
+  //   // Obtenha os detalhes dos produtos selecionados com base nos seus IDs
+  //   const selectedProducts = products.filter((product) => isSelected(product._id));
+  
+  //   // Navegue para a página de destino e passe os dados dos produtos como estado
+  //   navigate('/solicita', { selectedProducts });
+  // };
+
+  const handleSend = async () => {
+    try {
+      const selectedProducts = products.filter((product) => isSelected(product._id));
+
+      const requestData = {
+        request_date: new Date(),
+        quantity: selectedProducts.length,
+        product: selectedProducts.map((product) => product._id),
+      };
+
+      await axios.post('http://localhost:3000/request', requestData);
+      // A solicitação foi enviada com sucesso
+
+      // Redirecionar para a página de destino ou fazer outra ação necessária
+      navigate('/solicita');
+    } catch (error) {
+      console.error('Erro ao enviar a solicitação:', error);
+    }
+  };
   
   return (
     <div>
+       {products === null ? (
+      <p>Carregando produtos...</p>
+      ) : (
+          <>
     <TextField
       label="Filtrar por nome do produto"
       value={filterValue}
@@ -148,6 +185,11 @@ const ProductTable = () => {
         <button onClick={() => setSelected([])}>Limpar Seleção</button>
         <p>{selected.length} {selected.length === 1 ? 'item selecionado' : 'itens selecionados'}</p>
       </div>
+      <div>
+      <button onClick={handleSend}>Enviar</button>
+            </div>
+             </>
+    )}
       </div>
   );
 };
