@@ -1,8 +1,4 @@
-
-
-
 export function WelcomeFunc() {
-
   return (
     <div>
       <title>Welcome</title>

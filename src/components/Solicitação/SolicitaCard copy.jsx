@@ -79,22 +79,28 @@ export const SolicitaCard = () => {
             subheader={`Quantidade: ${request.quantity}`}
           />
           <CardContent>
-          {Array.isArray(request.products) && request.products.map((product) =>(
-              <Card key={product._id} sx={{ marginTop: '8px' }}>
-                <CardMedia component="img" height="140" image={product.image} alt={product.product_name} />
-                <CardContent>
-                  <Typography variant="body2" color="text.secondary">
-                    {product.product_name}
-                  </Typography>
-                  <Typography variant="body2" color="text.secondary">
-                    {product.description}
-                  </Typography>
-                  <Typography variant="body2" color="text.secondary">
-                    Quantidade: {product.quantity}
-                  </Typography>
-                </CardContent>
-              </Card>
-            ))}
+            {Array.isArray(request.products) &&
+              request.products.map((product) => (
+                <Card key={product._id} sx={{ marginTop: '8px' }}>
+                  <CardMedia
+                    component="img"
+                    height="140"
+                    image={product.image}
+                    alt={product.product_name}
+                  />
+                  <CardContent>
+                    <Typography variant="body2" color="text.secondary">
+                      {product.product_name}
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary">
+                      {product.description}
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary">
+                      Quantidade: {product.quantity}
+                    </Typography>
+                  </CardContent>
+                </Card>
+              ))}
           </CardContent>
           <CardActions disableSpacing>
             <IconButton aria-label="add to favorites">

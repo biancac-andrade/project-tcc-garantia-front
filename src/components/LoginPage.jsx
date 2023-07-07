@@ -10,7 +10,6 @@ const LoginPage = () => {
   const { setAuthData } = useContext(AuthContext);
   const navigate = useNavigate(); // Obtenha o objeto history
 
-
   const handleEmailChange = (event) => {
     setEmail(event.target.value);
   };
@@ -19,7 +18,7 @@ const LoginPage = () => {
     setPassword(event.target.value);
   };
 
-/*   const handleLogin = () => {
+  /*   const handleLogin = () => {
     api.post('/auth/login', { email, password })
       .then((response) => {
         const token = response.data.token;
@@ -38,8 +37,8 @@ const LoginPage = () => {
       });
   };
  */
-  
- /*  const handleLogin = () => {
+
+  /*  const handleLogin = () => {
     api.post('/auth/login', { email, password })
       .then((response) => {
         const token = response.data.token;
@@ -85,50 +84,47 @@ const LoginPage = () => {
   }; */
 
   const handleLogin = () => {
-  api.post('/auth/login', { email, password })
-    .then((response) => {
-      const token = response.data.token;
-      setAuthToken(token); // Configura o token JWT nas requisições
+    api
+      .post('/auth/login', { email, password })
+      .then((response) => {
+        const token = response.data.token;
+        setAuthToken(token); // Configura o token JWT nas requisições
 
-      // Fazer uma solicitação para obter os detalhes do usuário autenticado
-      api.get('/user/profile')
-        .then((response) => {
-          console.log('Detalhes do usuário:', response.data);
-          const user = response.data;
-          const role = user.role;
+        // Fazer uma solicitação para obter os detalhes do usuário autenticado
+        api
+          .get('/user/profile')
+          .then((response) => {
+            console.log('Detalhes do usuário:', response.data);
+            const user = response.data;
+            const role = user.role;
 
-          // Agora você pode diferenciar o tipo de usuário com base no campo "role"
-          if (role === 'admin') {
-            navigate('/welcomeAdmin');
-          } else if (role === 'funcionario') {
-            navigate('/welcomeFunc');
-          } else {
-            console.error('Tipo de usuário desconhecido:', role);
-            // Lógica para lidar com o tipo de usuário desconhecido
-          }
+            // Agora você pode diferenciar o tipo de usuário com base no campo "role"
+            if (role === 'admin') {
+              navigate('/welcomeAdmin');
+            } else if (role === 'funcionario') {
+              navigate('/welcomeFunc');
+            } else {
+              console.error('Tipo de usuário desconhecido:', role);
+              // Lógica para lidar com o tipo de usuário desconhecido
+            }
 
-          setAuthData({ token, user });
-        })
-        .catch((error) => {
-          console.error('Erro ao obter detalhes do usuário:', error);
-          // Trate erros ao obter detalhes do usuário
-        });
-    })
-    .catch((error) => {
-      console.error('Erro de autenticação:', error);
-      // Trate erros de autenticação
-    });
-};
-
+            setAuthData({ token, user });
+          })
+          .catch((error) => {
+            console.error('Erro ao obter detalhes do usuário:', error);
+            // Trate erros ao obter detalhes do usuário
+          });
+      })
+      .catch((error) => {
+        console.error('Erro de autenticação:', error);
+        // Trate erros de autenticação
+      });
+  };
 
   return (
     <div>
       <h1>Login</h1>
-      <TextField
-        label="Email"
-        value={email}
-        onChange={handleEmailChange}
-      />
+      <TextField label="Email" value={email} onChange={handleEmailChange} />
       <TextField
         label="Password"
         type="password"
@@ -139,7 +135,9 @@ const LoginPage = () => {
         Login
       </Button>
       <Link to="/signup">
-        <Button variant="contained" color="secondary">Cadastro</Button>
+        <Button variant="contained" color="secondary">
+          Cadastro
+        </Button>
       </Link>
     </div>
   );

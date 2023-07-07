@@ -27,14 +27,14 @@ const App = () => {
         Authorization: `Bearer ${token}`,
       },
     })
-      .then(response => {
+      .then((response) => {
         if (response.ok) {
           setIsAuthenticated(true);
         } else {
           setIsAuthenticated(false);
         }
       })
-      .catch(error => {
+      .catch((error) => {
         console.error('Erro ao verificar a autenticação:', error);
         setIsAuthenticated(false);
       });
@@ -47,23 +47,23 @@ const App = () => {
 
   return (
     <StyledProvider>
-        <AuthProvider>
-              <Router>
-                <Routes>
-                    <Route path="/login" element={<LoginPage />} />
-                    <Route
-                      path="/profile"
-                      element={<PrivateRoute component={ProfilePage} isAuthenticated={isAuthenticated} />}
-                    />
-                    <Route path="/" element={<Navigate to="/login" />} />
-                    <Route exact path="/welcomeFunc" element={< WelcomeFunc />} />
-                    <Route exact path="/welcomeAdmin" element={< WelcomeAdmin />} />
-                    <Route exact path="/removeUser" element={< RemoveUser/>} />
-                    <Route exact path="/signup" element={< SignupPage />} />
-                    <Route exact path="/products" element={< ProductTable />} />
-                    <Route exact path="/solicita/:id" element={< SolicitaCard />} />
-                </Routes>
-              </Router>
+      <AuthProvider>
+        <Router>
+          <Routes>
+            <Route path="/login" element={<LoginPage />} />
+            <Route
+              path="/profile"
+              element={<PrivateRoute component={ProfilePage} isAuthenticated={isAuthenticated} />}
+            />
+            <Route path="/" element={<Navigate to="/login" />} />
+            <Route exact path="/welcomeFunc" element={<WelcomeFunc />} />
+            <Route exact path="/welcomeAdmin" element={<WelcomeAdmin />} />
+            <Route exact path="/removeUser" element={<RemoveUser />} />
+            <Route exact path="/signup" element={<SignupPage />} />
+            <Route exact path="/products" element={<ProductTable />} />
+            <Route exact path="/solicita/:id" element={<SolicitaCard />} />
+          </Routes>
+        </Router>
       </AuthProvider>
     </StyledProvider>
   );

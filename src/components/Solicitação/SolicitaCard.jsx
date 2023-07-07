@@ -1,7 +1,17 @@
 import React, { useContext, useEffect, useState } from 'react';
 import axios from 'axios';
-import { useParams, useNavigate} from 'react-router-dom';
-import { Card, CardHeader, CardContent, Typography, CardActions, IconButton, Collapse, Slider, TextField } from '@mui/material';
+import { useParams, useNavigate } from 'react-router-dom';
+import {
+  Card,
+  CardHeader,
+  CardContent,
+  Typography,
+  CardActions,
+  IconButton,
+  Collapse,
+  Slider,
+  TextField,
+} from '@mui/material';
 import { ExpandMore, Delete, Add, Remove } from '@mui/icons-material';
 import * as Styles from './SolicitaCard.styles';
 import { format } from 'date-fns';
@@ -16,7 +26,6 @@ export const SolicitaCard = () => {
     fetchRequest();
   }, [id]); // Adicione 'id' às dependências
 
-
   const fetchRequest = async () => {
     try {
       const response = await axios.get(`http://localhost:3000/request/${id}`);
@@ -25,11 +34,15 @@ export const SolicitaCard = () => {
       const requestData = response.data;
 
       // Formatar a data
-      const formattedDate = requestData.request_date ? format(new Date(requestData.request_date), "'Dia' dd 'de' MMMM 'de' yyyy 'às' HH:mm:ss 'hrs'") : '';
+      const formattedDate = requestData.request_date
+        ? format(
+            new Date(requestData.request_date),
+            "'Dia' dd 'de' MMMM 'de' yyyy 'às' HH:mm:ss 'hrs'"
+          )
+        : '';
 
       // Atualizar o estado com os dados da solicitação e a data formatada
       setRequest({ ...requestData, formattedDate });
-
 
       console.log('sera', response);
     } catch (error) {
@@ -41,32 +54,30 @@ export const SolicitaCard = () => {
     return <p>Carregando detalhes da solicitação...</p>;
   }
 
-  const {formattedDate, quantity, product } = request;
+  const { formattedDate, quantity, product } = request;
 
   const handleExpandClick = () => {
     setExpanded(!expanded);
   };
 
-  const handleClickGoBack= () => {
-    navigate('/products')
+  const handleClickGoBack = () => {
+    navigate('/products');
   };
-
 
   const handleRemoveProduct = async (productId) => {
     try {
       await axios.delete(`http://localhost:3000/request/${id}/${productId}`);
-  
+
       setRequest((prevRequest) => {
         const updatedProduct = prevRequest.product.filter((item) => item._id !== productId);
         return { ...prevRequest, product: updatedProduct };
       });
-  
+
       console.log('Produto removido com sucesso');
     } catch (error) {
       console.error('Erro ao remover o produto:', error);
     }
   };
-
 
   return (
     <>

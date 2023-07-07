@@ -17,7 +17,7 @@ const RemoveUser = () => {
           Authorization: `Bearer ${token}`,
         },
       };
-  
+
       const response = await axios.get('http://localhost:3000/user/profile', config);
       if (Array.isArray(response.data)) {
         setUsers(response.data); // Atualiza o estado com os dados dos usuários
@@ -58,16 +58,17 @@ const RemoveUser = () => {
           </tr>
         </thead>
         <tbody>
-          {users && users.map((user) => (
-            <tr key={user._id}>
-              <td>{user.name}</td>
-              <td>{user.email}</td>
-              <td>{user.role}</td>
-              <td>
-                <button onClick={() => handleRemoveUser(user._id)}>Remover</button>
-              </td>
-            </tr>
-          ))}
+          {users &&
+            users.map((user) => (
+              <tr key={user._id}>
+                <td>{user.name}</td>
+                <td>{user.email}</td>
+                <td>{user.role}</td>
+                <td>
+                  <button onClick={() => handleRemoveUser(user._id)}>Remover</button>
+                </td>
+              </tr>
+            ))}
         </tbody>
       </table>
     </div>

@@ -1,5 +1,13 @@
 import React, { useState } from 'react';
-import { Button, TextField, Typography, Select, MenuItem, FormControl, InputLabel } from '@mui/material';
+import {
+  Button,
+  TextField,
+  Typography,
+  Select,
+  MenuItem,
+  FormControl,
+  InputLabel,
+} from '@mui/material';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
@@ -29,7 +37,12 @@ const SignupPage = () => {
 
   const handleSignup = () => {
     axios
-      .post('http://localhost:3000/auth/register', { name, email, password, role }) // Incluir role no objeto enviado para a API
+      .post('http://localhost:3000/auth/register', {
+        name,
+        email,
+        password,
+        role,
+      }) // Incluir role no objeto enviado para a API
       .then((response) => {
         setName('');
         setEmail('');
@@ -81,12 +94,7 @@ const SignupPage = () => {
       />
       <FormControl fullWidth margin="normal" variant="outlined">
         <InputLabel id="role-label">Role</InputLabel>
-        <Select
-          labelId="role-label"
-          value={role}
-          onChange={handleRoleChange}
-          label="Role"
-        >
+        <Select labelId="role-label" value={role} onChange={handleRoleChange} label="Role">
           <MenuItem value="admin">Admin</MenuItem>
           <MenuItem value="funcionário">Funcionário</MenuItem>
         </Select>
