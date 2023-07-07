@@ -1,125 +1,113 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import axios from 'axios';
-import Card from '@mui/material/Card';
-import CardHeader from '@mui/material/CardHeader';
-import CardMedia from '@mui/material/CardMedia';
-import CardContent from '@mui/material/CardContent';
-import CardActions from '@mui/material/CardActions';
-import Collapse from '@mui/material/Collapse';
-import Avatar from '@mui/material/Avatar';
-import IconButton from '@mui/material/IconButton';
-import Typography from '@mui/material/Typography';
-import { red } from '@mui/material/colors';
-import FavoriteIcon from '@mui/icons-material/Favorite';
-import ShareIcon from '@mui/icons-material/Share';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import MoreVertIcon from '@mui/icons-material/MoreVert';
+import { useParams, useNavigate} from 'react-router-dom';
+import { Card, CardHeader, CardContent, Typography, CardActions, IconButton, Collapse, Slider, TextField } from '@mui/material';
+import { ExpandMore, Delete, Add, Remove } from '@mui/icons-material';
+import * as Styles from './SolicitaCard.styles';
+import { format } from 'date-fns';
 
 export const SolicitaCard = () => {
-  const [requests, setRequests] = useState([]);
+  const { id } = useParams();
+  const [request, setRequest] = useState(null);
+  const [expanded, setExpanded] = useState(false);
+  const navigate = useNavigate(); // Obtenha o objeto history
 
   useEffect(() => {
-    fetchRequests();
-  }, []);
+    fetchRequest();
+  }, [id]); // Adicione 'id' às dependências
 
-  const fetchRequests = async () => {
+
+  const fetchRequest = async () => {
     try {
-      const response = await axios.get('http://localhost:3000/request');
-      const requestList = response.data;
-      const updatedRequests = await Promise.all(
-        requestList.map(async (request) => {
-          const productDetails = await fetchProductDetails(request.product);
-          return {
-            ...request,
-            products: productDetails,
-          };
-        })
-      );
-      setRequests(updatedRequests);
+      const response = await axios.get(`http://localhost:3000/request/${id}`);
+      // setRequest(response.data);
+
+      const requestData = response.data;
+
+      // Formatar a data
+      const formattedDate = requestData.request_date ? format(new Date(requestData.request_date), "'Dia' dd 'de' MMMM 'de' yyyy 'às' HH:mm:ss 'hrs'") : '';
+
+      // Atualizar o estado com os dados da solicitação e a data formatada
+      setRequest({ ...requestData, formattedDate });
+
+
+      console.log('sera', response);
     } catch (error) {
-      console.error('Erro ao buscar as solicitações:', error);
+      console.error('Erro ao buscar os detalhes da solicitação:', error);
     }
   };
 
-  const fetchProductDetails = async (productIds) => {
+  if (!request) {
+    return <p>Carregando detalhes da solicitação...</p>;
+  }
+
+  const {formattedDate, quantity, product } = request;
+
+  const handleExpandClick = () => {
+    setExpanded(!expanded);
+  };
+
+  const handleClickGoBack= () => {
+    navigate('/products')
+  };
+
+
+  const handleRemoveProduct = async (productId) => {
     try {
-      const response = await axios.get('http://localhost:3000/product', {
-        params: {
-          ids: productIds,
-        },
+      await axios.delete(`http://localhost:3000/request/${id}/${productId}`);
+  
+      setRequest((prevRequest) => {
+        const updatedProduct = prevRequest.product.filter((item) => item._id !== productId);
+        return { ...prevRequest, product: updatedProduct };
       });
-      return response.data;
+  
+      console.log('Produto removido com sucesso');
     } catch (error) {
-      console.error('Erro ao buscar os detalhes do produto:', error);
-      return [];
+      console.error('Erro ao remover o produto:', error);
     }
   };
 
-  const handleExpandClick = (requestId) => {
-    setRequests((prevRequests) =>
-      prevRequests.map((request) =>
-        request._id === requestId ? { ...request, expanded: !request.expanded } : request
-      )
-    );
-  };
 
   return (
-    <div>
-      <h1>Página de Destino</h1>
-      {requests.map((request) => (
-        <Card key={request._id} sx={{ maxWidth: 345, marginBottom: '16px' }}>
-          <CardHeader
-            avatar={<Avatar sx={{ bgcolor: red[500] }}>{request._id}</Avatar>}
-            action={
-              <IconButton aria-label="settings">
-                <MoreVertIcon />
-              </IconButton>
-            }
-            title={request.request_date}
-            subheader={`Quantidade: ${request.quantity}`}
-          />
+    <>
+      <Styles.StyledCardContainer>
+        <CardHeader title={formattedDate} />
+        <CardContent>
+          <Typography variant="body1">Quantidade: {quantity}</Typography>
+        </CardContent>
+        <CardActions>
+          <IconButton
+            onClick={handleExpandClick}
+            aria-expanded={expanded}
+            aria-label="Ver produtos"
+            disabled={product.length === 0}
+          >
+            <ExpandMore />
+          </IconButton>
+        </CardActions>
+        <Collapse in={expanded} timeout="auto" unmountOnExit>
           <CardContent>
-            {request.products.map((product) => (
-              <Card key={product._id} sx={{ marginTop: '8px' }}>
-                <CardMedia component="img" height="140" image={product.image} alt={product.product_name} />
+            {product.map((item) => (
+              <Styles.StyledCard key={item._id} sx={{ mb: 2 }}>
+                <Styles.StyledImage src={item.image} alt="Imagem do produto" />
                 <CardContent>
-                  <Typography variant="body2" color="text.secondary">
-                    {product.product_name}
-                  </Typography>
-                  <Typography variant="body2" color="text.secondary">
-                    {product.description}
-                  </Typography>
-                  <Typography variant="body2" color="text.secondary">
-                    Quantidade: {product.quantity}
-                  </Typography>
+                  <CardHeader title={item.product_name} />
+                  <Typography variant="body2">{item.description}</Typography>
+                  <Typography variant="body2">Quantidade do produto: {item.quantity}</Typography>
+                  <Styles.IconsContainer>
+                    <IconButton onClick={() => handleRemoveProduct(item._id)}>
+                      <Delete />
+                    </IconButton>
+                  </Styles.IconsContainer>
                 </CardContent>
-              </Card>
+              </Styles.StyledCard>
             ))}
           </CardContent>
-          <CardActions disableSpacing>
-            <IconButton aria-label="add to favorites">
-              <FavoriteIcon />
-            </IconButton>
-            <IconButton aria-label="share">
-              <ShareIcon />
-            </IconButton>
-            <IconButton
-              onClick={() => handleExpandClick(request._id)}
-              aria-expanded={request.expanded}
-              aria-label="show more"
-            >
-              <ExpandMoreIcon />
-            </IconButton>
-          </CardActions>
-          <Collapse in={request.expanded} timeout="auto" unmountOnExit>
-            <CardContent>
-              <Typography paragraph>Method:</Typography>
-              <Typography paragraph>This is more information about the request.</Typography>
-              <Typography paragraph>...</Typography>
-            </CardContent>
-          </Collapse>
-        </Card>
-      ))}
-    </div>
+        </Collapse>
+      </Styles.StyledCardContainer>
+      <div>
+        <button onClick={handleClickGoBack}>Voltar para a Tabela de Produtos</button>
+      </div>
+    </>
   );
 };
