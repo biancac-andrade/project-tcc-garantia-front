@@ -15,8 +15,8 @@ import {
 } from '@mui/material';
 
 const ProductTable = () => {
-  //const [products, setProducts] = useState([]);
-  const [products, setProducts] = useState(null);
+  const [products, setProducts] = useState([]);
+  //const [products, setProducts] = useState(null);
   const [filterValue, setFilterValue] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
@@ -39,9 +39,13 @@ const ProductTable = () => {
         page: currentPage,
         limit: itemsPerPage,
       },
-    });
-      setProducts(response.data);
-      setTotalItems(response.data.totalItems);
+      });
+        const { products: fetchedProducts, totalItems } = response.data;
+
+        setProducts(fetchedProducts);
+        setTotalItems(totalItems);
+      // setProducts(response.data.data);
+      // setTotalItems(response.data.totalItems);
     } catch (error) {
       console.error('Erro ao buscar os produtos:', error);
     }
@@ -64,8 +68,12 @@ const ProductTable = () => {
   // product.product_name.toLowerCase().includes(filterValue.toLowerCase())
   // );
 
-  const filteredProducts = products !== null ? products.filter((product) =>
+/*   const filteredProducts = products !== null ? products.filter((product) =>
   product.product_name.toLowerCase().includes(filterValue.toLowerCase())
+) : []; */
+  
+const filteredProducts = products !== null ? products.filter((product) =>
+product.product_name.toLowerCase().includes(filterValue.toLowerCase())
 ) : [];
   
   const handleSelectAll = (event) => {
@@ -105,11 +113,17 @@ const ProductTable = () => {
         product: selectedProducts.map((product) => product._id),
       };
 
-      await axios.post('http://localhost:3000/request', requestData);
+     /*  await axios.post('http://localhost:3000/request', requestData);
       // A solicitação foi enviada com sucesso
 
       // Redirecionar para a página de destino ou fazer outra ação necessária
-      navigate('/solicita');
+      navigate(`/solicita/${requestId}`); */
+
+      const response = await axios.post('http://localhost:3000/request', requestData);
+      const { request: createdRequest } = response.data; // Obtenha o objeto de resposta com o pedido criado
+  
+      // Redirecionar para a página de destino e passar o ID do pedido como parâmetro na URL
+      navigate(`/solicita/${createdRequest._id}`);
     } catch (error) {
       console.error('Erro ao enviar a solicitação:', error);
     }
