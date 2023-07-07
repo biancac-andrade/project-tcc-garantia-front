@@ -9,6 +9,7 @@ import { AuthProvider } from './context/AuthContext';
 import PrivateRoute from './components/PrivateRoute';
 import RemoveUser from './components/RemoveUser';
 import ProductTable from './components/produtos/ProductTable';
+import { SolicitaCard } from './components/Solicitação/SolicitaCard';
 
 const App = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -58,6 +59,7 @@ const App = () => {
       <Route exact path="/removeUser" element={< RemoveUser/>} />
       <Route exact path="/signup" element={< SignupPage />} />
       <Route exact path="/products" element={< ProductTable />} />
+      <Route exact path="/solicita" element={< SolicitaCard />} />
     </Routes>
   </Router>
     </AuthProvider>
