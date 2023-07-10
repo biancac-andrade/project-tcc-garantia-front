@@ -1,18 +1,15 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useParams, useNavigate } from 'react-router-dom';
 import {
-  Card,
   CardHeader,
   CardContent,
   Typography,
   CardActions,
   IconButton,
   Collapse,
-  Slider,
-  TextField,
 } from '@mui/material';
-import { ExpandMore, Delete, Add, Remove } from '@mui/icons-material';
+import { ExpandMore, Delete } from '@mui/icons-material';
 import * as Styles from './SolicitaCard.styles';
 import { format } from 'date-fns';
 
