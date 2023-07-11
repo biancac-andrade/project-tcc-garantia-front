@@ -69,7 +69,7 @@ function App() {
             <Route exact path="/solicita/:id" element={<SolicitaCard />} />
             <Route exact path="/formulario" element={<ProductForm />} />
             <Route exact path="/tela" element={<Tela />} />
-            <Route exact path="/reposicao/:id" element={<Reposicao />} />
+            <Route exact path="/reposicao" element={<Reposicao />} />
 
           </Routes>
         </Router>
