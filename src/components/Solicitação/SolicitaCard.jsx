@@ -76,6 +76,37 @@ export const SolicitaCard = () => {
     }
   };
 
+  const handleClickConfirm = async () => {
+    try {
+      const productResponse = await axios.get('http://localhost:3000/product');
+      const requestResponse = await axios.get(`http://localhost:3000/request/${id}`);
+  
+      if (!productResponse.data || !requestResponse.data) {
+        console.error('Falha ao obter os dados do produto ou da solicitação');
+        return;
+      }
+  
+      const { _id, request_date, product } = requestResponse.data;
+  
+      const replaceData = {
+        replace_date: request_date,
+        product_id: product.map(item => item._id),
+        request_id: _id,
+        status: 'Solicitado'
+      };
+  
+      const response = await axios.post('http://localhost:3000/replacement', replaceData);
+      const createdReplace = response.data; // Obtenha a resposta completa da substituição criada
+  
+      console.log('Reposição criada com sucesso:', createdReplace);
+  
+      // Navegar para a página que mostra todas as informações enviadas
+      navigate(`/reposicao/${createdReplace._id}`);
+    } catch (error) {
+      console.error('Erro ao criar a Reposicao:', error);
+    }
+  };
+
   return (
     <>
       <Styles.StyledCardContainer>
@@ -115,6 +146,10 @@ export const SolicitaCard = () => {
       </Styles.StyledCardContainer>
       <div>
         <button onClick={handleClickGoBack}>Voltar para a Tabela de Produtos</button>
+      </div>
+
+      <div>
+        <button onClick={handleClickConfirm}>Confirmar</button>
       </div>
     </>
   );

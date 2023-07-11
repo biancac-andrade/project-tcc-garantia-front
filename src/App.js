@@ -1,18 +1,23 @@
+/* eslint-disable react/jsx-filename-extension */
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import { StyledProvider } from './styled';
-import LoginPage from './components/LoginPage';
+import LoginPage from './components/Usuário/Autenticação/LoginPage';
 import ProfilePage from './components/ProfilePage';
-import SignupPage from './components/Signup';
-import { WelcomeFunc } from './components/WelcomeFuncionario';
-import { WelcomeAdmin } from './components/WelcomeAdmin';
+import SignupPage from './components/Usuário/Autenticação/Signup';
+import { WelcomeFunc } from './components/Usuário/Funcionario/WelcomeFuncionario';
+import { WelcomeAdmin } from './components/Usuário/Admin/WelcomeAdmin';
 import { AuthProvider } from './context/AuthContext';
-import PrivateRoute from './components/PrivateRoute';
-import RemoveUser from './components/RemoveUser';
+import PrivateRoute from './components/routes/PrivateRoute';
+import RemoveUser from './components/Usuário/Admin/Acesso/RemoveUser';
 import ProductTable from './components/produtos/ProductTable';
 import { SolicitaCard } from './components/Solicitação/SolicitaCard';
+import { ProductForm } from './components/Formulario/Formulário';
+import { Tela } from './components/House/Tela';
+import { Reposicao } from './components/Reposição/Reposicao';
 
-const App = () => {
+
+function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   // Função para verificar a autenticação
@@ -62,11 +67,15 @@ const App = () => {
             <Route exact path="/signup" element={<SignupPage />} />
             <Route exact path="/products" element={<ProductTable />} />
             <Route exact path="/solicita/:id" element={<SolicitaCard />} />
+            <Route exact path="/formulario" element={<ProductForm />} />
+            <Route exact path="/tela" element={<Tela />} />
+            <Route exact path="/reposicao/:id" element={<Reposicao />} />
+
           </Routes>
         </Router>
       </AuthProvider>
     </StyledProvider>
   );
-};
+}
 
 export default App;
