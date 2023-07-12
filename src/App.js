@@ -13,7 +13,7 @@ import RemoveUser from './components/Usuário/Admin/Acesso/RemoveUser';
 import ProductTable from './components/produtos/ProductTable';
 import { SolicitaCard } from './components/Solicitação/SolicitaCard';
 import { ProductForm } from './components/Formulario/Formulário';
-import { Tela } from './components/House/Tela';
+import { TabBar } from './components/House/TabBar';
 import { Reposicao } from './components/Reposição/Reposicao';
 
 
@@ -68,9 +68,8 @@ function App() {
             <Route exact path="/products" element={<ProductTable />} />
             <Route exact path="/solicita/:id" element={<SolicitaCard />} />
             <Route exact path="/formulario" element={<ProductForm />} />
-            <Route exact path="/tela" element={<Tela />} />
+            <Route exact path="/tela" element={<TabBar />} /> 
             <Route exact path="/reposicao" element={<Reposicao />} />
-
           </Routes>
         </Router>
       </AuthProvider>
