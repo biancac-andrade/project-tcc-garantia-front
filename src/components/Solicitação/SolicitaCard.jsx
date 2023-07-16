@@ -17,10 +17,22 @@ export const SolicitaCard = () => {
   const { id } = useParams();
   const [request, setRequest] = useState(null);
   const [expanded, setExpanded] = useState(false);
+  const [statuses, setStatuses] = useState([]);
+
   const navigate = useNavigate(); // Obtenha o objeto history
+
+  const fetchStatuses = async () => {
+    try {
+      const response = await axios.get('http://localhost:3000/status');
+      setStatuses(response.data);
+    } catch (error) {
+      console.error('Erro ao buscar os status:', error);
+    }
+  };
 
   useEffect(() => {
     fetchRequest();
+    fetchStatuses();
   }, [id]); // Adicione 'id' às dependências
 
   const fetchRequest = async () => {
@@ -76,18 +88,28 @@ export const SolicitaCard = () => {
     }
   };
 
+
   const handleClickConfirm = async () => {
+
     try {
-      const requestData = {
-        replace_date: new Date(),
-        status: 'Pendente',
+
+      const pendingStatus = statuses.find((status) => status.status_type === 'pendente');
+
+      if (!pendingStatus) {
+        console.error('Status "pendente" não encontrado');
+        return;
+      }
+
+      const pendingData = {
+        pending_date: new Date(),
+        status: pendingStatus._id,
         request: id,
       };
   
-      await axios.post('http://localhost:3000/replacement', requestData);
+      await axios.post('http://localhost:3000/pending', pendingData);
   
       // Navegar para a nova página
-      navigate('/reposicao');
+      navigate('/pendente');
     } catch (error) {
       console.error('Erro ao enviar a substituição:', error);
     }
