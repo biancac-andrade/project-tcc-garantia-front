@@ -15,6 +15,7 @@ import { SolicitaCard } from './components/Solicitação/SolicitaCard';
 import { ProductForm } from './components/Formulario/Formulário';
 import { TabBar } from './components/House/TabBar';
 import { Reposicao } from './components/Reposição/Reposicao';
+import { Pendencia } from './components/Pendencia/Pendencia';
 
 
 function App() {
@@ -70,6 +71,7 @@ function App() {
             <Route exact path="/formulario" element={<ProductForm />} />
             <Route exact path="/tela" element={<TabBar />} /> 
             <Route exact path="/reposicao" element={<Reposicao />} />
+            <Route exact path="/pendente" element={<Pendencia />} />
           </Routes>
         </Router>
       </AuthProvider>
