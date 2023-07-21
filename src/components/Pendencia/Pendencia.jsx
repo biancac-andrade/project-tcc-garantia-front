@@ -99,25 +99,29 @@ export const Pendencia = () => {
 ))}
           
           <ul>
-            {pending.request.map((request) => (
-              <li key={request._id}>
-                <h4>Data da Solicitação: {new Date(request.request_date).toLocaleString()}</h4>
-                <h4>Quantidade: {request.quantity}</h4>
+          {pending.request.map((request) => (
+        <li key={request._id}>
+          <h4>Data da Solicitação: {new Date(request.request_date).toLocaleString()}</h4>
+          <h4>Quantidade: {request.quantity}</h4>
+          <ul>
+            {request.product.map((product) => (
+              <li key={product._id}>
+                <h5>Nome do Produto: {product.product_name}</h5>
+                <p>Descrição: {product.description}</p>
+                <p>Quantidade: {product.quantity}</p>
+                <p>
+                  Imagem: <img src={product.image} alt="Imagem do produto" />
+                </p>
                 <ul>
-                  {request.product.map((product) => (
-                    <li key={product._id}>
-                      <h5>Nome do Produto: {product.product_name}</h5>
-                      <p>Descrição: {product.description}</p>
-                      <p>Quantidade: {product.quantity}</p>
-                      <p>
-                        Imagem: <img src={product.image} alt="Imagem do produto" />
-                      </p>
-                      <p>Tipo: {product.type}</p>
-                    </li>
+                  {product.type.map((type) => (
+                    <li key={type._id}>Tipo: {type.name_type}</li>
                   ))}
                 </ul>
               </li>
             ))}
+              </ul>
+            </li>
+          ))}
           </ul>
           <div>
             <button onClick={() => handleCompletePending(pending._id)}>
