@@ -17,6 +17,8 @@ import { Reposicao } from './components/Reposição/Reposicao';
 import { Pendencia } from './components/Pendencia/Pendencia';
 import { UpdateUser } from './components/Usuário/Dados/UpdateUser';
 import UserList from './components/Usuário/Dados/DeleteUser/UserList';
+import HistoryPage from './components/Historico/HistoryPage';
+import ReplacementDetailsPage from './components/Historico/Details';
 
 
 function App() {
@@ -74,6 +76,8 @@ function App() {
             <Route exact path="/pendente" element={<Pendencia />} />
             <Route exact path="/update" element={<UpdateUser />} />
             <Route exact path="/delete" element={<UserList/>} />
+            <Route exact path="/historico" element={< HistoryPage/>} />
+            <Route exact path="/detailsHistorico/:id" element={< ReplacementDetailsPage />} />
           </Routes>
         </Router>
       </AuthProvider>
