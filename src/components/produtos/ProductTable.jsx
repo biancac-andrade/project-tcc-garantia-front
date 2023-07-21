@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 import axios from 'axios';
 import {
@@ -17,6 +17,8 @@ import {
 } from '@mui/material';
 
 const ProductTable = () => {
+  const { id } = useParams();
+
   const [products, setProducts] = useState([]);
   //const [products, setProducts] = useState(null);
   const [filterValue, setFilterValue] = useState('');
@@ -24,12 +26,25 @@ const ProductTable = () => {
   const [itemsPerPage, setItemsPerPage] = useState(10);
   const [totalItems, setTotalItems] = useState(0);
   const [selected, setSelected] = useState([]);
+  const [statuses, setStatuses] = useState([]);
+
+
+  const fetchStatuses = async () => {
+    try {
+      const response = await axios.get('http://localhost:3000/status');
+      setStatuses(response.data);
+    } catch (error) {
+      console.error('Erro ao buscar os status:', error);
+    }
+  };
+
 
   const navigate = useNavigate(); // Obtenha o objeto history
 
   useEffect(() => {
     fetchProducts();
-  }, [currentPage, itemsPerPage]);
+    fetchStatuses();
+  }, [currentPage, itemsPerPage, id]);
 
   const fetchProducts = async () => {
     try {
@@ -110,10 +125,18 @@ const ProductTable = () => {
     try {
       const selectedProducts = products.filter((product) => isSelected(product._id));
 
+      const selectedStatus = statuses.find((status) => status.status_type === 'em andamento');
+
+      if (!selectedStatus) {
+        console.error('Status "em andamento" não encontrado');
+        return;
+      }
+
       const requestData = {
         request_date: new Date(),
         quantity: selectedProducts.length,
         product: selectedProducts.map((product) => product._id),
+        status: selectedStatus._id
       };
 
       /*  await axios.post('http://localhost:3000/request', requestData);
@@ -209,7 +232,7 @@ const ProductTable = () => {
             </p>
           </div>
           <div>
-            <button onClick={handleSend}>Enviar</button>
+            <button onClick={() => handleSend(products._id)}>Enviar</button>
           </div>
         </>
       )}
